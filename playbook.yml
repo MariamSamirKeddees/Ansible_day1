@@ -1,0 +1,26 @@
+- name: Install and configure nginx
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache and install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Start nginx using shell
+      ansible.builtin.shell: |
+        nginx
+      args:
+        executable: /bin/bash
+
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /var/www/html/index.html
+
+    - name: Restart nginx using shell
+      ansible.builtin.shell: |
+        nginx -s reload
+      args:
+        executable: /bin/bash
